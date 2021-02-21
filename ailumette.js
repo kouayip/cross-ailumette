@@ -17,9 +17,17 @@ const ENTITY_TYPE = {
 
 /*** START COMPONENT ****/
 class Component {
-  constructor() {}
+  constructor() {
+    this._entity = null;
+  }
   type() {
     return TYPE_COMPONENT.UNKNOWN;
+  }
+  /**
+   * @param {Entity} entity
+   */
+  setEntity(entity) {
+    this._entity = entity;
   }
   init() {
     console.log("=> Init Component");
@@ -56,13 +64,25 @@ class VisitorComponent extends Component {
   }
   constructor() {
     super();
-    this.line = 0;
-    this.matches = 0;
+    this._locate = { line: 0, matches: 0 };
+  }
+
+  /**
+   * @param {Number} line
+   * @param {Number} matches
+   */
+  setLocate(line, matches) {
+    this._locate.line = line;
+    this._locate.matches = matches;
+  }
+
+  getLocate() {
+    return { line: this._line, matches: this._matches };
   }
 
   _reset() {
-    this.line = 0;
-    this.matches = 0;
+    this._locate.line = 0;
+    this._locate.matches = 0;
   }
 
   init() {
@@ -70,14 +90,13 @@ class VisitorComponent extends Component {
   }
   update() {
     console.log("Update Visitor");
+    console.log(`line: ${this._locate.line} matches: ${this._locate.matches}`);
   }
 }
 
 class InputComponent extends Component {
   constructor() {
     super();
-    this.line = 0;
-    this.matches = 0;
   }
   type() {
     return TYPE_COMPONENT.INPUT;
@@ -87,8 +106,10 @@ class InputComponent extends Component {
   }
   update() {
     console.log("Your turn:");
-    this.line = Number(prompt("Line: "));
-    this.matches = Number(prompt("Matches: "));
+    const line = Number(prompt("Line: "));
+    const matches = Number(prompt("Matches: "));
+    const visitor = this._entity.getComponent(TYPE_COMPONENT.VISITOR);
+    visitor.setLocate(line, matches);
   }
 }
 
@@ -131,9 +152,17 @@ class Entity {
   }
 
   /**
+   * @param {TYPE_COMPONENT} type
+   */
+  getComponent(type) {
+    return this._components[type];
+  }
+
+  /**
    * @param {Component} component
    */
   attach(component) {
+    component.setEntity(this);
     this._components[component.type()] = component;
   }
 
