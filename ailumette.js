@@ -85,12 +85,8 @@ class Component {
   setEntity(entity) {
     this._entity = entity;
   }
-  init() {
-    console.log("=> Init Component");
-  }
-  update() {
-    console.log("=> Update Component");
-  }
+  init() {}
+  update() {}
 }
 
 class MapComponent extends Component {
@@ -107,21 +103,16 @@ class MapComponent extends Component {
     return TYPE_COMPONENT.MAP;
   }
   init() {
-    console.log("=> Init MAP Component");
     this._map.init();
   }
-  update() {
-    console.log("=> update map Component");
-  }
+  update() {}
 }
 
 class DrawableComponent extends Component {
   type() {
     return TYPE_COMPONENT.DRAWABLE;
   }
-  init() {
-    console.log("=> Init Drawable Component");
-  }
+  init() {}
   update() {}
   draw() {
     console.log("*********");
@@ -170,12 +161,8 @@ class VisitorComponent extends Component {
     this._locate.matches = 0;
   }
 
-  init() {
-    console.log("=> Init Input Component");
-  }
+  init() {}
   update() {
-    console.log("Update Visitor");
-    console.log(`line: ${this._locate.line} matches: ${this._locate.matches}`);
     const map = this._entity
       .getWord()
       .getEntity(ENTITY_TYPE.GRAPHICS)
@@ -200,9 +187,7 @@ class InputComponent extends Component {
   type() {
     return TYPE_COMPONENT.INPUT;
   }
-  init() {
-    console.log("=> Init Input Component");
-  }
+  init() {}
   update() {
     console.log("Your turn:");
     /*** CHECK LINE ***/
@@ -246,9 +231,7 @@ class IAComponent extends Component {
   type() {
     return TYPE_COMPONENT.IA;
   }
-  init() {
-    console.log("=> Init IA Component");
-  }
+  init() {}
   update() {
     console.log("AI’s turn...");
     const map = this._entity
@@ -313,7 +296,6 @@ class Entity {
   }
 
   init() {
-    console.log(chalk.green(`+> Init ${this.type()} Entity Component`));
     for (const key in this._components) {
       if (Object.hasOwnProperty.call(this._components, key)) {
         const component = this._components[key];
